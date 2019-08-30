@@ -38,6 +38,7 @@ import os
 import tnglib.env as env
 
 from datetime import datetime, timedelta
+from logging import debug, error, info, warn
 
 LOG = logging.getLogger(__name__)
 
@@ -47,11 +48,13 @@ def sp_health_check():
 
     :returns: bool.
     """
-    url = env.root_api
+    url = env.status_api
+    LOG.debug("Calling SP at URL %s", url)
     try:
-        resp = requests.get(url, timeout=env.timeout)
+        resp = requests.get(url, timeout=env.timeout, verify=False)
         return True
-    except:
+    except Exception as e:
+        LOG.error(e)
         return False
 
 

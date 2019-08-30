@@ -51,9 +51,11 @@ def get_requests():
     """
 
     # get current list of requests
+    LOG.debug("Retrieving requests on %s", env.request_api)
     resp = requests.get(env.request_api,
                         timeout=env.timeout,
-                        headers=env.header)
+                        headers=env.header,
+                        verify=False)
 
     env.set_return_header(resp.headers)
 

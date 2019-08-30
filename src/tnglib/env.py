@@ -35,7 +35,9 @@ timeout = 15.0
 
 # Building all paths for global use
 sp_path = ''
+runtime_sp_path = ''
 root_api = ''
+status_api = ''
 ia_api = ''
 user_api = ''
 session_api = ''
@@ -92,6 +94,14 @@ def get_sp_path():
 
     return sp_path
 
+def get_runtime_sp_path():
+    """Get the configured runtime SP url.
+
+    :returns: the SP url.
+    """
+
+    return runtime_sp_path
+
 def set_timeout(timeout_in):
     """Set the timeout.
 
@@ -111,6 +121,16 @@ def set_sp_path(new_base_path):
     sp_path = new_base_path
     _build_paths()
 
+def set_runtime_sp_path(new_base_path):
+    """Set the path were the runtime SP can be reached.
+
+    :param new_base_path: SP url
+    """
+
+    global runtime_sp_path
+    runtime_sp_path = new_base_path
+    _build_paths()
+
 def add_token_to_header(token):
     """Set the header for all requests with the token.
 
@@ -124,6 +144,7 @@ def _build_paths():
     """ """
 
     global root_api
+    global status_api
     global pkg_api
     global ia_api
     global session_api
@@ -150,14 +171,16 @@ def _build_paths():
     global recommendations_api
     global analytics_engine_api
 
+    runtime_sp_api = ":9999/osm"
     gtk_api = ":32002/api/v3"
+    status_api = runtime_sp_path + runtime_sp_api
     root_api = sp_path + gtk_api
     user_api = sp_path + gtk_api + '/users'
-    session_api = sp_path + gtk_api + "/users/sessions"
+    session_api = runtime_sp_path + runtime_sp_api + "/admin/v1/tokens"
     pkg_api = sp_path + gtk_api + "/packages"
     ia_api = sp_path + gtk_api + "/settings"
     pkg_status_api = pkg_api + "/status"
-    request_api = sp_path + gtk_api + "/requests"
+    request_api = runtime_sp_path + runtime_sp_api + "/nslcm/v1/ns_instances_content"
     service_descriptor_api = sp_path + gtk_api + "/services"
     service_instance_api = sp_path + gtk_api + "/records/services"
     function_descriptor_api = sp_path + gtk_api + "/functions"
